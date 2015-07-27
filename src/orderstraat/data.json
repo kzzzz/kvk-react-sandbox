@@ -1,0 +1,122 @@
+﻿{
+  "filters": [
+    {
+      "id": 1,
+      "name": "Adres"
+    },
+    {
+      "id": 2,
+      "name": "Financiële gegevens"
+    },
+    {
+      "id": 3,
+      "name": "Functionarissen"
+    },
+    {
+      "id": 4,
+      "name": "Rechtszekerheid"
+    },
+    {
+      "id": 5,
+      "name": "Relaties"
+    },
+    {
+      "id": 6,
+      "name": "Tekenbevoegdheid"
+    },
+    {
+      "id": 7,
+      "name": "Bewijs van inschrijving"
+    },
+    {
+      "id": 8,
+      "name": "Gewaarmerkt"
+    }
+  ],
+  "products": [
+    {
+      "description": "compleet pakket met o.a. uittreksel, historie, jaarrekening en concernrelaties",
+      "name": "Bedrijfsprofiel",
+      "tags": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "uiState": "product-bestellen.bedrijfsprofiel"
+    },
+    {
+      "description": "officieel bewijs van inschrijving met o.a. naam, adres en functionarissen",
+      "name": "Uittreksels",
+      "tags": [
+        1,
+        7,
+        3,
+        8,
+        4,
+        6
+      ]
+    },
+    {
+      "description": "basisgegevens zoals KvK-nummer, adres, rechtsvorm en branchecode",
+      "name": "In het kort",
+      "tags": [
+        1
+      ]
+    },
+    {
+      "description": "gegevens uit het verleden, zoals oude handelsnamen en voormalige functionarissen",
+      "name": "Historie",
+      "tags": [
+        4
+      ]
+    },
+    {
+      "description": "financiële informatie, zoals de balans, winst- en verliesrekening en toelichting",
+      "name": "Jaarekeningen",
+      "tags": [
+        2,
+        8,
+        4
+      ]
+    },
+    {
+      "description": "overzicht van de structuur van het concern",
+      "name": "Concernrelaties",
+      "tags": [
+        4,
+        5
+      ]
+    },
+    {
+      "description": "zoals statuten, fusie- of splitsingsvoorstellen",
+      "name": "Documenten",
+      "tags": [
+        8
+      ]
+    },
+    {
+      "description": "overzicht van de documenten die de rechtspersoon heeft gedeponeerd",
+      "name": "Deponeringen",
+      "tags": []
+    },
+    {
+      "description": "",
+      "name": "Algemene voorwaarden",
+      "tags": []
+    },
+    {
+      "description": "",
+      "name": "Telefonisch informatie uit het Handelsregister",
+      "tags": [
+        1,
+        3,
+        4,
+        5,
+        6
+      ]
+    }
+  ]
+}

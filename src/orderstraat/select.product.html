@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap-theme.css"/>
+    <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.css"/>
+    <script src="../../bower_components/jquery/dist/jquery.js"></script>
+    <script src="../../bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="../../bower_components/react/react.js"></script>
+    <script src="../../bower_components/react/JSXTransformer.js"></script>
+</head>
+<script type="text/jsx">
+    var App = React.createClass({
+        getInitialState: function () {
+            return {
+                filters: [],
+                products: [],
+                selectedFilters: []
+            }
+        },
+        componentDidMount: function () {
+            $.get('data.json', function (response) {
+                if (this.isMounted()) {
+                    this.setState({
+                        filters: response.filters,
+                        products: response.products
+                    });
+                }
+            }.bind(this));
+        },
+        selectFilter: function (id) {
+            console.log('selected filter id: ' + id);
+            var selected = this.state.selectedFilters;
+            selected.push(id);
+            this.setState({
+                selectedFilters: selected
+            });
+        },
+        eachFilter: function(filter, i){
+            return ( <Filter key={filter.id}
+                             index = {i}
+                             data={filter}
+                             toggleSelect={this.selectFilter}/>);
+        },
+        eachProduct:function(product, i){
+            return( <Product key={product.id}
+                             product={product}/>);
+        },
+        render: function () {
+            return (
+                    <div>
+                        <div>Selected filters: {this.state.selectedFilters}</div>
+                        <div>
+                            <ul className="list-group">{this.state.filters.map(this.eachFilter)}</ul>
+                        </div>
+                        <div>
+                            <ul className="list-group">{this.state.products.map(this.eachProduct)}</ul>
+                        </div>
+                    </div>
+            );
+        }
+    });
+
+    var Filter = React.createClass({
+        render: function () {
+            return (
+                    <li className="list-group-item" onClick={this.toggleSelect}>{this.props.data.name}</li>
+            );
+        },
+        toggleSelect: function(){
+            console.log(this.props.data);
+            this.props.toggleSelect(this.props.data.id);
+        }
+    });
+
+    var Product = React.createClass({
+        render: function () {
+            return (
+                    <li className="list-group-item">{this.props.product.name}</li>
+            );
+        }
+    });
+
+    React.render(<App />, document.getElementById("content"));
+</script>
+<body>
+<div class="container">
+    <h1>Select product</h1>
+    <div id="content"></div>
+</div>
+</body>
+</html>
