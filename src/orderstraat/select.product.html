@@ -35,21 +35,27 @@
             }.bind(this));
         },
         selectFilter: function (id) {
-            var selectedFilters = this.state.selectedFilters;
-            var contains = _.contains(selectedFilters, id);
 
-            if (contains) {
-                _.remove(selectedFilters, function (filter) {
-                    return filter === id;
-                })
-            } else {
-                selectedFilters.push(id);
-            }
+            var selectedFilters = updateSelectedFilters(this.state.selectedFilters);
 
             this.setState({
                 selectedFilters: selectedFilters,
                 productsToDisplay: getProductsToDisplay(selectedFilters, this.state.products)
             });
+
+            function updateSelectedFilters(selectedFilters) {
+                var contains = _.contains(selectedFilters, id);
+
+                if (contains) {
+                    _.remove(selectedFilters, function (filter) {
+                        return filter === id;
+                    })
+                } else {
+                    selectedFilters.push(id);
+                }
+
+                return selectedFilters;
+            }
 
             function getProductsToDisplay(selectedFilters, products) {
                 if (selectedFilters.length === 0) {
@@ -82,19 +88,22 @@
         render: function () {
             var hidden = this.state.showFilters ? '' : 'hidden';
             return (
-                    <div>
-                        <FilterInvoker displayed={this.state.showFilters}
-                                       toggleDisplayFilters={this.toggleDisplayFilters}
-                                       selectedFilters={this.state. selectedFilters}/>
-                        <div className={hidden}>
-                            <div>Selected filters: {this.state.selectedFilters}</div>
-                            <div>
-                                <ul className="list-group">{this.state.filters.map(this.eachFilter)}</ul>
+                    <div className="panel panel-default">
+                        <div className="panel-heading">
+                            <h1>Select product</h1>
+                        </div>
+                        <div class="panel-body">
+                            <div className={hidden}>
+                                <div>
+                                    <ul className="list-group">{this.state.filters.map(this.eachFilter)}</ul>
+                                </div>
                             </div>
+                            <FilterInvoker displayed={this.state.showFilters}
+                                           toggleDisplayFilters={this.toggleDisplayFilters}
+                                           selectedFilters={this.state. selectedFilters}/>
                             <div>
                                 <ul className="list-group">{this.state.productsToDisplay.map(this.eachProduct)}</ul>
                             </div>
-
                         </div>
                     </div>
             );
@@ -106,9 +115,8 @@
 
             var glyphicon = this.props.displayed ? "glyphicon glyphicon-chevron-up" : "glyphicon glyphicon-chevron-down";
             return (
-                    <div onClick={this.toggleDisplay}>
-                        <h3>
-                            {this.getTitle()}
+                    <div onClick={this.toggleDisplay} className="well">
+                        <h3>{this.getTitle()}
                             <span className="pull-right">
                                 <button className="btn btn-xs btn-info">
                                     <span className={glyphicon}></span>
@@ -121,14 +129,14 @@
         toggleDisplay: function () {
             this.props.toggleDisplayFilters();
         },
-        getTitle: function(){
-            if(this.props.displayed) {
+        getTitle: function () {
+            if (this.props.displayed) {
                 return "Verberg filters";
             }
 
             var count = this.props.selectedFilters.length;
 
-            if(count === 0){
+            if (count === 0) {
                 return "Filter op productkenmerken";
             }
 
@@ -169,8 +177,6 @@
 </script>
 <body>
 <div class="container">
-    <h1>Select product</h1>
-
     <div id="content"></div>
 </div>
 </body>
