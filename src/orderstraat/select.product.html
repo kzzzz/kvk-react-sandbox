@@ -5,6 +5,7 @@
     <title></title>
     <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap-theme.css"/>
     <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.css"/>
+    <link rel="stylesheet" href="../sass/style.css"/>
     <script src="../../bower_components/jquery/dist/jquery.js"></script>
     <script src="../../bower_components/lodash/lodash.js"></script>
     <script src="../../bower_components/bootstrap/dist/js/bootstrap.js"></script>
@@ -15,9 +16,10 @@
     var App = React.createClass({
         getInitialState: function () {
             return {
+                showFilters: false,
                 filters: [],
-                products: [],
                 selectedFilters: [],
+                products: [],
                 productsToDisplay: []
             }
         },
@@ -53,17 +55,24 @@
                 if (selectedFilters.length === 0) {
                     return products;
                 } else {
-                    return _.filter(products, function(product){
-                        var result =  _.difference(selectedFilters, product.tags);
+                    return _.filter(products, function (product) {
+                        var result = _.difference(selectedFilters, product.tags);
                         return result.length === 0;
                     })
                 }
             }
         },
+        toggleDisplayFilters: function () {
+            this.setState({
+                showFilters: !this.state.showFilters
+            });
+        },
         eachFilter: function (filter, i) {
+            var isSelected = _.contains(this.state.selectedFilters, filter.id);
             return ( <Filter key={filter.id}
                              index={i}
-                             data={filter}
+                             filter={filter}
+                             isSelected={isSelected}
                              toggleSelect={this.selectFilter}/>);
         },
         eachProduct: function (product, i) {
@@ -71,29 +80,80 @@
                               product={product}/>);
         },
         render: function () {
+            var hidden = this.state.showFilters ? '' : 'hidden';
             return (
                     <div>
-                        <div>Selected filters: {this.state.selectedFilters}</div>
-                        <div>
-                            <ul className="list-group">{this.state.filters.map(this.eachFilter)}</ul>
-                        </div>
-                        <div>
-                            <ul className="list-group">{this.state.productsToDisplay.map(this.eachProduct)}</ul>
+                        <FilterInvoker displayed={this.state.showFilters}
+                                       toggleDisplayFilters={this.toggleDisplayFilters}
+                                       selectedFilters={this.state. selectedFilters}/>
+                        <div className={hidden}>
+                            <div>Selected filters: {this.state.selectedFilters}</div>
+                            <div>
+                                <ul className="list-group">{this.state.filters.map(this.eachFilter)}</ul>
+                            </div>
+                            <div>
+                                <ul className="list-group">{this.state.productsToDisplay.map(this.eachProduct)}</ul>
+                            </div>
+
                         </div>
                     </div>
             );
         }
     });
 
+    var FilterInvoker = React.createClass({
+        render: function () {
+
+            var glyphicon = this.props.displayed ? "glyphicon glyphicon-chevron-up" : "glyphicon glyphicon-chevron-down";
+            return (
+                    <div onClick={this.toggleDisplay}>
+                        <h3>
+                            {this.getTitle()}
+                            <span className="pull-right">
+                                <button className="btn btn-xs btn-info">
+                                    <span className={glyphicon}></span>
+                                </button>
+                            </span>
+                        </h3>
+                    </div>
+            );
+        },
+        toggleDisplay: function () {
+            this.props.toggleDisplayFilters();
+        },
+        getTitle: function(){
+            if(this.props.displayed) {
+                return "Verberg filters";
+            }
+
+            var count = this.props.selectedFilters.length;
+
+            if(count === 0){
+                return "Filter op productkenmerken";
+            }
+
+            return count === 1
+                    ? 'Gefilterd op ' + this.props.selectedFilters.length + ' kenmerk'
+                    : 'Gefilterd op ' + this.props.selectedFilters.length + ' kenmerken';
+        }
+    });
+
     var Filter = React.createClass({
         render: function () {
+            var glyphicon = this.props.isSelected ? 'glyphicon glyphicon-ok' : 'glyphicon glyphicon-plus';
+            var button = this.props.isSelected ? 'btn btn-xs btn-success' : 'btn btn-xs btn-warning';
             return (
-                    <li className="list-group-item" onClick={this.toggleSelect}>{this.props.data.name}</li>
+                    <li className="list-group-item" onClick={this.toggleSelect}>{this.props.filter.name}
+                        <span className="pull-right">
+                            <button className={button}>
+                                <span className={glyphicon}></span>
+                            </button>
+                        </span>
+                    </li>
             );
         },
         toggleSelect: function () {
-            console.log(this.props.data);
-            this.props.toggleSelect(this.props.data.id);
+            this.props.toggleSelect(this.props.filter.id);
         }
     });
 
