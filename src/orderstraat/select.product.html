@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap-theme.css"/>
     <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.css"/>
     <script src="../../bower_components/jquery/dist/jquery.js"></script>
+    <script src="../../bower_components/lodash/lodash.js"></script>
     <script src="../../bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <script src="../../bower_components/react/react.js"></script>
     <script src="../../bower_components/react/JSXTransformer.js"></script>
@@ -16,7 +17,8 @@
             return {
                 filters: [],
                 products: [],
-                selectedFilters: []
+                selectedFilters: [],
+                productsToDisplay: []
             }
         },
         componentDidMount: function () {
@@ -24,28 +26,49 @@
                 if (this.isMounted()) {
                     this.setState({
                         filters: response.filters,
-                        products: response.products
+                        products: response.products,
+                        productsToDisplay: response.products
                     });
                 }
             }.bind(this));
         },
         selectFilter: function (id) {
-            console.log('selected filter id: ' + id);
-            var selected = this.state.selectedFilters;
-            selected.push(id);
+            var selectedFilters = this.state.selectedFilters;
+            var contains = _.contains(selectedFilters, id);
+
+            if (contains) {
+                _.remove(selectedFilters, function (filter) {
+                    return filter === id;
+                })
+            } else {
+                selectedFilters.push(id);
+            }
+
             this.setState({
-                selectedFilters: selected
+                selectedFilters: selectedFilters,
+                productsToDisplay: getProductsToDisplay(selectedFilters, this.state.products)
             });
+
+            function getProductsToDisplay(selectedFilters, products) {
+                if (selectedFilters.length === 0) {
+                    return products;
+                } else {
+                    return _.filter(products, function(product){
+                        var result =  _.difference(selectedFilters, product.tags);
+                        return result.length === 0;
+                    })
+                }
+            }
         },
-        eachFilter: function(filter, i){
+        eachFilter: function (filter, i) {
             return ( <Filter key={filter.id}
-                             index = {i}
+                             index={i}
                              data={filter}
                              toggleSelect={this.selectFilter}/>);
         },
-        eachProduct:function(product, i){
-            return( <Product key={product.id}
-                             product={product}/>);
+        eachProduct: function (product, i) {
+            return ( <Product key={product.id}
+                              product={product}/>);
         },
         render: function () {
             return (
@@ -55,7 +78,7 @@
                             <ul className="list-group">{this.state.filters.map(this.eachFilter)}</ul>
                         </div>
                         <div>
-                            <ul className="list-group">{this.state.products.map(this.eachProduct)}</ul>
+                            <ul className="list-group">{this.state.productsToDisplay.map(this.eachProduct)}</ul>
                         </div>
                     </div>
             );
@@ -68,7 +91,7 @@
                     <li className="list-group-item" onClick={this.toggleSelect}>{this.props.data.name}</li>
             );
         },
-        toggleSelect: function(){
+        toggleSelect: function () {
             console.log(this.props.data);
             this.props.toggleSelect(this.props.data.id);
         }
@@ -87,6 +110,7 @@
 <body>
 <div class="container">
     <h1>Select product</h1>
+
     <div id="content"></div>
 </div>
 </body>
