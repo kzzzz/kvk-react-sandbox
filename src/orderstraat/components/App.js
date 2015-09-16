@@ -9,7 +9,7 @@ var App = React.createClass({
         }
     },
     componentDidMount: function () {
-        $.get('data.json', function (response) {
+        dataService.getProductFilters().then(function (response) {
             if (this.isMounted()) {
                 this.setState({
                     filters: response.filters,
