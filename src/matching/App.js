@@ -7,6 +7,8 @@ var App = React.createClass({
                     <h1>Matching tool</h1>
                     <Description />
                     <SearchBar />
+                    <div id="filter-list"></div>
+                    <div id="company-list"></div>
                 </div>
                 <Footer />
             </div>

@@ -11,10 +11,10 @@ var SearchBar = React.createClass({
 
 var Filters = React.createClass({
     displayBranches: function(){
-        console.log('Display branches')
+        React.render(<Branches />, document.getElementById("filter-list"));
     },
     displayProvinces: function(){
-        console.log('Display provinces')
+        React.render(<Provinces />, document.getElementById("filter-list"))
     },
     render: function () {
         return (
